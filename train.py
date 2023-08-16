@@ -97,9 +97,10 @@ if __name__ == '__main__':
     
             #model = model.create_vit(config_data, config_model)
             model = model.create_resnet(config_data.getint('N_CLASSES'))
-            model.compile(optimizer=tf.keras.optimizers.SGD(lr_decayed_fn, momentum=0.9),
+            model.compile(optimizer=tf.keras.optimizers.Adam(), #tf.keras.optimizers.SGD(lr_decayed_fn, momentum=0.9),
                            loss= tf.keras.losses.CategoricalCrossentropy(),
-                           metrics=[tf.keras.metrics.Accuracy()])
+                           metrics=['accuracy'])
+                        #metrics=['accuracy'tf.keras.metrics.Accuracy()])
             history = model.fit(ds_train,
                                 epochs=config_model.getint('EPOCHS'),
                                 callbacks=[early_stopping, model_checkpoint_callback])                
