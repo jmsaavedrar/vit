@@ -42,8 +42,9 @@ if __name__ == '__main__':
     #load configuracion file
     config = configparser.ConfigParser()
     config.read(config_file)
-    config_model = config['VIT']
-    assert not config_model == None, '{} does not exist'.format(ssl_model_name)
+    model_name = 'VIT'
+    config_model = config[model_name]
+    assert not config_model == None, '{} does not exist'.format(model_name)
     
     config_data = config['DATA']
     ds = None
@@ -57,7 +58,7 @@ if __name__ == '__main__':
     ds_valid = ds['test']    
     ds_train = (
         ds_train.shuffle(1024, seed=config_model.getint('SEED'))
-        .map(lambda x: map_func(x, daug.get_augmentation_fun(), n_classes = config_data.get('N_CLASSES')), num_parallel_calls=AUTO)
+        .map(lambda x: map_func(x, daug.get_augmentation_fun(), n_classes = config_data.getint('N_CLASSES')), num_parallel_calls=AUTO)
         .batch(config_model.getint('BATCH_SIZE'))
         .prefetch(AUTO) )
                
@@ -65,7 +66,7 @@ if __name__ == '__main__':
     model_dir =  config_model.get('MODEL_DIR')
     if not config_model.get('EXP_CODE') is None :
         model_dir = os.path.join(model_dir, config_model.get('EXP_CODE'))
-    model_dir = os.path.join(model_dir, dataset_name, ssl_model_name)
+    model_dir = os.path.join(model_dir, dataset_name, model_name)
     if not os.path.exists(model_dir) :
         os.makedirs(os.path.join(model_dir, 'ckp'))
         os.makedirs(os.path.join(model_dir, 'model'))
