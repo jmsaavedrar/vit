@@ -33,6 +33,7 @@ AUTO = tf.data.AUTOTUNE
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-config', type = str, required = True)    
+    parser.add_argument('-model', type = str, choices = ['VIT', 'RESNET'], required = True)
     parser.add_argument('-gpu', type = int, required = False) # gpu = -1 set for using all gpus
     args = parser.parse_args()
     gpu_id = 0
@@ -43,7 +44,7 @@ if __name__ == '__main__':
     #load configuracion file
     config = configparser.ConfigParser()
     config.read(config_file)
-    model_name = 'VIT'
+    model_name = args.model
     config_model = config[model_name]
     assert not config_model == None, '{} does not exist'.format(model_name)
     
