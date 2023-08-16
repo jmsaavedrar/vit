@@ -1,6 +1,6 @@
 import tensorflow as tf
 import tensorflow_addons as tfa
-import imageop
+
 
 class DataAugmentation():
     def __init__(self, config : dict):
@@ -80,7 +80,6 @@ class DataAugmentation():
     
     def identity(self, image):
         return image
-    
     def get_augmentation_fun(self):
         if self.config.get('DATASET') == 'QD' :
             return self.sketch_augment
