@@ -57,7 +57,7 @@ if __name__ == '__main__':
     ds_valid = ds['test']    
     ds_train = (
         ds_train.shuffle(1024, seed=config_model.getint('SEED'))
-        .map(lambda x: map_func(x, daug.get_augmentation_fun()), num_parallel_calls=AUTO)
+        .map(lambda x: map_func(x, daug.get_augmentation_fun(), n_classes = config_data.get('N_CLASSES')), num_parallel_calls=AUTO)
         .batch(config_model.getint('BATCH_SIZE'))
         .prefetch(AUTO) )
                
