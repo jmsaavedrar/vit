@@ -52,7 +52,8 @@ if __name__ == '__main__':
     ds = None
     #
     dataset_name = config_data.get('DATASET')    
-    ds = tfds.load('tfds_qd')
+    #ds = tfds.load('tfds_qd')
+    ds = tfds.load('tfds_skberlin')
         
     #loading dataset example cifar
     daug = aug.DataAugmentation(config_data)
