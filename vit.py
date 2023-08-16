@@ -128,7 +128,8 @@ def create_vit(config_data, config_model):
     # MLP to classify outputs
     logits = MLP(projection_dim, num_classes, 0.5)(representation)
     # Create model
-    model = tf.keras.Model(inputs = inputs, outputs = logits)
+    
+    model = tf.keras.Model(inputs = inputs, outputs = tf.keras.layers.Softmax()(logits))    
     return model
 
 
