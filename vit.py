@@ -109,11 +109,11 @@ class TransformerEncoder(tf.keras.layers.Layer):
         return y    
     
 def create_vit(config_data, config_model):
-    num_classes = config_data.get()
-    num_patches = config_data.get('CROP_SIZE') / 16
+    num_classes = config_data.get('N_CLASSES')
+    num_patches = config_data.getint('CROP_SIZE') / 16
     num_patches = num_patches * num_patches
-    projection_dim = config_model.get('PROJECT_DIM') 
-    input_shape = (config_data.get('CROP_SIZE'), config_data.get('CROP_SIZE'), 3)
+    projection_dim = config_model.getint('PROJECT_DIM') 
+    input_shape = (config_data.getint('CROP_SIZE'), config_data.getint('CROP_SIZE'), 3)
     inputs = tf.keras.layers.Input(shape=input_shape)
     # Patch extractor
     patches = PatchExtractor()(inputs)
