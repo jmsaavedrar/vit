@@ -28,6 +28,8 @@ def map_func(sample, daug_func, n_classes):
     label = sample['label']
     return daug_func(image), tf.one_hot(label, depth = n_classes)
 
+
+
 AUTO = tf.data.AUTOTUNE
 #---------------------------------------------------------------------------------------
 if __name__ == '__main__':
@@ -58,12 +60,22 @@ if __name__ == '__main__':
     #loading dataset example cifar
     daug = aug.DataAugmentation(config_data)
     ds_train = ds['train']
-    ds_valid = ds['test']    
+    ds_valid = ds['test'] 
+    
+    n_valid = len(ds_valid)   
+    n_steps_valid = n_valid// config_model.getint('BATCH_SIZE')
+    
     ds_train = (
         ds_train.shuffle(1024, seed=config_model.getint('SEED'))
         .map(lambda x: map_func(x, daug.get_augmentation_fun(), n_classes = config_data.getint('N_CLASSES')), num_parallel_calls=AUTO)
         .batch(config_model.getint('BATCH_SIZE'))
         .prefetch(AUTO) )
+    
+        
+    ds_valid= (
+        ds_train.shuffle(1024, seed=config_model.getint('SEED'))
+        .map(lambda x: map_func(x, lambda image : image, n_classes = config_data.getint('N_CLASSES')), num_parallel_calls=AUTO)
+        .batch(config_model.getint('BATCH_SIZE')))
                
     #----------------------------------------------------------------------------------
     model_dir =  config_model.get('MODEL_DIR')
@@ -102,6 +114,8 @@ if __name__ == '__main__':
                            metrics=['accuracy'])
                         #metrics=['accuracy'tf.keras.metrics.Accuracy()])
             history = model.fit(ds_train,
+                                validation_data = ds_valid,
+                                validation_steps = n_steps_valid,
                                 epochs=config_model.getint('EPOCHS'),
                                 callbacks=[early_stopping, model_checkpoint_callback])                
     
