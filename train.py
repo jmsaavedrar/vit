@@ -73,7 +73,7 @@ if __name__ == '__main__':
         
     ds_valid= (
         ds_valid.shuffle(1024, seed=config_model.getint('SEED'))
-        .map(lambda x: map_func(x, lambda image:  tf.image.grayscale_to_rgb(image), n_classes = config_data.getint('N_CLASSES')), num_parallel_calls=AUTO)
+        .map(lambda x: map_func(x, lambda image:  tf.cast(tf.image.grayscale_to_rgb(image), tf.float32), n_classes = config_data.getint('N_CLASSES')), num_parallel_calls=AUTO)
         .batch(config_model.getint('BATCH_SIZE')))
                
     #----------------------------------------------------------------------------------
