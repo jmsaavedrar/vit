@@ -1,5 +1,6 @@
 import tensorflow as tf
 import tensorflow_addons as tfa
+import imageop
 
 class DataAugmentation():
     def __init__(self, config : dict):
@@ -75,6 +76,9 @@ class DataAugmentation():
         image = tf.expand_dims(image, axis = 0)
         image = tfa.image.random_cutout(image, (14,14), constant_values= 0)
         image = tf.squeeze(image, axis = 0)
+        return image
+    
+    def identity(self, image):
         return image
     
     def get_augmentation_fun(self):
