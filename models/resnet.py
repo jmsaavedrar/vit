@@ -230,13 +230,13 @@ class ResNet(tf.keras.Model):
     
     def __init__(self, block_sizes, filters, number_of_classes, use_bottleneck = False, se_factor = 0, kernel_regularizer = None, **kwargs) :
         super(ResNet, self).__init__(**kwargs)
-        self.backbone = ResNetBackbone(block_sizes, filters, use_bottleneck, se_factor, kernel_regularizer = kernel_regularizer, name = 'backbone')                            
+        self.encoder = ResNetBackbone(block_sizes, filters, use_bottleneck, se_factor, kernel_regularizer = kernel_regularizer, name = 'encoder')                            
         self.avg_pool = tf.keras.layers.GlobalAveragePooling2D()                     
         self.classifier = tf.keras.layers.Dense(number_of_classes, name='classifier')
         
     def call(self, inputs, training):
         x = inputs
-        x = self.backbone(x, training)    
+        x = self.encoder(x, training)    
         x = self.avg_pool(x)                
         x = tf.keras.layers.Flatten()(x)                        
         x = self.classifier(x)
