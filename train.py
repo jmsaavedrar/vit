@@ -12,32 +12,21 @@ QuickDraw datasets, so you need the following repository
 import sys
 import socket
 #---------------------------------------------------------------------------
-## you can modify this part to set a local path for the dataset project
-ip = socket.gethostbyname(socket.gethostname()) 
-if ip == '192.168.20.62' :
-    sys.path.insert(0,'/home/DIINF/vchang/jsaavedr/Research/git/datasets')
-else :
-    sys.path.insert(0,'/home/jsaavedr/Research/git/datasets')
-#---------------------------------------------------------------------------
 import os
 import tensorflow as tf
 import tensorflow_datasets as tfds
+import improc.augmentation as aug
+import vit 
 import configparser
 import argparse
 # import the dataset builder, here is an example for qd
 
 #---------------------------------------------------------------------------------------
-def sketch_augment(self, image):
-    # As discussed in the SimCLR paper, the series of augmentation
-    # transformations (except for random crops) need to be applied
-    # randomly to impose translational invariance.        
-                
-    image = tf.image.grayscale_to_rgb(image)        
-    image = self.flip_random_crop(image)
-    image = self.random_apply(self.color_jitter, image, p=0.8)
-    image = self.random_apply(self.color_drop, image, p=0.2)        
-    return image        
-#---------------------------------------------------------------------------------------
+def map_func(sample, daug_func):
+    image = sample['image']    
+    label = sample['label']
+    return daug_func(image), tf.one_hot(label)
+
 AUTO = tf.data.AUTOTUNE
 #---------------------------------------------------------------------------------------
 if __name__ == '__main__':
@@ -63,18 +52,16 @@ if __name__ == '__main__':
     dataset_name = config_data.get('DATASET')    
     ds = tfds.load('tfds_qd')
         
-    daug = aug.DataAugmentation(config_data)    
     #loading dataset example cifar
-    
+    daug = aug.DataAugmentation(config_data)
     ds_train = ds['train']
     ds_valid = ds['test']    
     ds_train = (
         ds_train.shuffle(1024, seed=config_model.getint('SEED'))
-        .map(lambda x: ssl_map_func(x, daug.get_augmentation_fun()), num_parallel_calls=AUTO)
+        .map(lambda x: map_func(x, daug.get_augmentation_fun()), num_parallel_calls=AUTO)
         .batch(config_model.getint('BATCH_SIZE'))
         .prefetch(AUTO) )
-    
-           
+               
     #----------------------------------------------------------------------------------
     model_dir =  config_model.get('MODEL_DIR')
     if not config_model.get('EXP_CODE') is None :
@@ -105,8 +92,10 @@ if __name__ == '__main__':
                                                                    save_weights_only=True,                                                                   
                                                                    save_freq = 'epoch',  )
     
-            model = vit.vit(config_data, config_model)
-            model.compile(optimizer=tf.keras.optimizers.SGD(lr_decayed_fn, momentum=0.9))
+            model = vit.create_vit(config_data, config_model)
+            model.compile(optimizer=tf.keras.optimizers.SGD(lr_decayed_fn, momentum=0.9),
+                           loss= tf.keras.losses.CategoricalCrossentropy(),
+                           metrics=[tf.keras.metrics.Accuracy()])
             history = model.fit(ds_train,
                                 epochs=config_model.getint('EPOCHS'),
                                 callbacks=[early_stopping, model_checkpoint_callback])                

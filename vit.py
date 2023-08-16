@@ -5,6 +5,7 @@ patch-extractort -> patch-embedding +  positional embedding -> transformer encod
 
 import tensorflow as tf
 
+
 class PatchExtractor(tf.keras.layers.Layer):
     """
     suggested images of 224x224
@@ -35,7 +36,7 @@ class PatchEncoder(tf.keras.layers.Layer):
         self.class_token = tf.Variable(initial_value=class_token, trainable=True)
         self.projection = tf.keras.layers.Dense(units=projection_dim)
         """
-        here, we use Embedding object, we should change to cosine-sine-based positional encoding
+        here, we use embedding object, we should change to cosine-sine-based positional encoding or another one
         """
         self.position_embedding = tf.keras.layers.Embedding(input_dim=num_patches+1, output_dim=projection_dim)
 
@@ -48,7 +49,7 @@ class PatchEncoder(tf.keras.layers.Layer):
         patches_embed = self.projection(patch)
         patches_embed = tf.concat([patches_embed, class_token], 1)
         # calcualte positional embeddings
-        positions = tf.range(start=0, limit=self.num_patches+1, delta=1)
+        positions = tf.range(start=0, limit=self.num_patches+1, delta=1)        
         positions_embed = self.position_embedding(positions)
         # add both embeddings
         encoded = patches_embed + positions_embed
@@ -107,7 +108,12 @@ class TransformerEncoder(tf.keras.layers.Layer):
         y = self.dropout(x)
         return y    
     
-def create_vit(num_classes, num_patches=196, projection_dim=768, input_shape=(224, 224, 3)):
+def create_vit(config_data, config_model):
+    num_classes = config_data.get()
+    num_patches = config_data.get('CROP_SIZE') / 16
+    num_patches = num_patches * num_patches
+    projection_dim = config_model.get('PROJECT_DIM') 
+    input_shape = (config_data.get('CROP_SIZE'), config_data.get('CROP_SIZE'), 3)
     inputs = tf.keras.layers.Input(shape=input_shape)
     # Patch extractor
     patches = PatchExtractor()(inputs)
@@ -122,7 +128,7 @@ def create_vit(num_classes, num_patches=196, projection_dim=768, input_shape=(22
     # MLP to classify outputs
     logits = MLP(projection_dim, num_classes, 0.5)(representation)
     # Create model
-    model = tf.keras.Model(inputs=inputs, outputs=logits)
+    model = tf.keras.Model(inputs = inputs, outputs = logits)
     return model
 
 
