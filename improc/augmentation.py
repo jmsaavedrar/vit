@@ -81,7 +81,7 @@ class DataAugmentation():
     def identity(self, image):
         return image
     
-    def get_identity(self):
+    def get_identity(self):        
         return self.identity
     
     def get_augmentation_fun(self):
