@@ -110,7 +110,7 @@ class TransformerEncoder(tf.keras.layers.Layer):
     
 def create_vit(config_data, config_model):
     num_classes = config_data.get('N_CLASSES')
-    num_patches = config_data.getint('CROP_SIZE') / 16
+    num_patches = config_data.getint('CROP_SIZE') // 16
     num_patches = num_patches * num_patches
     projection_dim = config_model.getint('PROJECT_DIM') 
     input_shape = (config_data.getint('CROP_SIZE'), config_data.getint('CROP_SIZE'), 3)
