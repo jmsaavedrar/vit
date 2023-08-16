@@ -22,10 +22,10 @@ import argparse
 # import the dataset builder, here is an example for qd
 
 #---------------------------------------------------------------------------------------
-def map_func(sample, daug_func):
+def map_func(sample, daug_func, n_classes):
     image = sample['image']    
     label = sample['label']
-    return daug_func(image), tf.one_hot(label)
+    return daug_func(image), tf.one_hot(label, depth = n_classes)
 
 AUTO = tf.data.AUTOTUNE
 #---------------------------------------------------------------------------------------
