@@ -80,6 +80,10 @@ class DataAugmentation():
     
     def identity(self, image):
         return image
+    
+    def get_identity(self):
+        return self.identity
+    
     def get_augmentation_fun(self):
         if self.config.get('DATASET') == 'QD' :
             return self.sketch_augment
