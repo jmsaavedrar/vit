@@ -37,8 +37,7 @@ if __name__ == '__main__':
     gpu_id = 0
     if not args.gpu is None :
         gpu_id = args.gpu    
-    config_file = args.config
-    ssl_model_name = args.model
+    config_file = args.config    
     assert os.path.exists(config_file), '{} does not exist'.format(config_file)            
     #load configuracion file
     config = configparser.ConfigParser()
