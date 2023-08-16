@@ -16,7 +16,8 @@ import os
 import tensorflow as tf
 import tensorflow_datasets as tfds
 import improc.augmentation as aug
-import vit 
+#import models.vit as model 
+import models.resnet as model
 import configparser
 import argparse
 # import the dataset builder, here is an example for qd
@@ -92,7 +93,8 @@ if __name__ == '__main__':
                                                                    save_weights_only=True,                                                                   
                                                                    save_freq = 'epoch',  )
     
-            model = vit.create_vit(config_data, config_model)
+            #model = model.create_vit(config_data, config_model)
+            model = model.create_resnet(config_data.getint('N_CLASSES'))
             model.compile(optimizer=tf.keras.optimizers.SGD(lr_decayed_fn, momentum=0.9),
                            loss= tf.keras.losses.CategoricalCrossentropy(),
                            metrics=[tf.keras.metrics.Accuracy()])
