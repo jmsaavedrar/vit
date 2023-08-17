@@ -78,11 +78,14 @@ class DataAugmentation():
         image = tf.squeeze(image, axis = 0)
         return image
     
-    def identity(self, image):
+    def sketch_augmentation_for_testing(self, image):
+        image = tf.image.grayscale_to_rgb(image)
+        size_resize = int(self.config.getint('CROP_SIZE')*1.15)
+        image = tf.image.resize_with_pad(image, size_resize, size_resize)
+        image = tf.image.random_crop(image, (self.config.getint('CROP_SIZE'), self.config.getint('CROP_SIZE'), 3))
         return image
     
-    def get_identity(self):        
-        return self.identity
+    
     
     def get_augmentation_fun(self):
         if self.config.get('DATASET') == 'QD' :
