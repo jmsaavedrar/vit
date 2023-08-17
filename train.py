@@ -28,7 +28,6 @@ def map_func(sample, daug_func, n_classes):
     return daug_func(image), tf.one_hot(label, depth = n_classes)
 
 
-
 AUTO = tf.data.AUTOTUNE
 #---------------------------------------------------------------------------------------
 if __name__ == '__main__':
@@ -67,8 +66,8 @@ if __name__ == '__main__':
     ds_train = (
         ds_train.shuffle(1024, seed=config_model.getint('SEED'))
         .map(lambda x: map_func(x,  daug.get_augmentation_fun(), n_classes = config_data.getint('N_CLASSES')), num_parallel_calls=AUTO)
-        .batch(config_model.getint('BATCH_SIZE'))
-        .prefetch(AUTO) )
+        .batch(config_model.getint('BATCH_SIZE')))
+        #.prefetch(AUTO) )
     
         
     ds_valid= (
