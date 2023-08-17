@@ -52,7 +52,7 @@ class PatchEncoder(tf.keras.layers.Layer):
         positions = tf.range(start=0, limit=self.num_patches+1, delta=1)        
         positions_embed = self.position_embedding(positions)
         # add both embeddings
-        encoded = patches_embed #+ positions_embed
+        encoded = patches_embed + positions_embed
         return encoded
 
 class MLP(tf.keras.layers.Layer):
