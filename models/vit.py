@@ -100,7 +100,7 @@ class TransformerEncoder(tf.keras.layers.Layer):
         self.norm = tf.keras.layers.LayerNormalization(epsilon=1e-6)
         self.dropout = tf.keras.layers.Dropout(0.5)
 
-    def call(self, x):
+    def call(self, x ):
         # Create a [batch_size, projection_dim] tensor.
         for block in self.blocks:
             x = block(x)
@@ -120,7 +120,7 @@ def create_vit(config_data, config_model):
     # Patch encoder
     patches_embed = PatchEncoder(num_patches, projection_dim)(patches)
     # Transformer encoder
-    representation = TransformerEncoder(projection_dim, num_blocks=6, name = 'encoder')(patches_embed)
+    representation = TransformerEncoder(projection_dim, num_blocks=6)(patches_embed)
     """
     here, global average pooling is used, but the paper says using class embedding representations[:,0,:]
     """
