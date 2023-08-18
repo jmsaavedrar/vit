@@ -61,8 +61,8 @@ class DataAugmentation():
         image = tf.image.grayscale_to_rgb(image)
             
         image = self.flip_random_crop(image)
-        image = self.random_apply(self.color_jitter, image, p=0.8)
-        image = self.random_apply(self.color_drop, image, p=0.2)        
+        #image = self.random_apply(self.color_jitter, image, p=0.8)
+        #image = self.random_apply(self.color_drop, image, p=0.2)        
         return image
     
     def image_augment(self, image):
