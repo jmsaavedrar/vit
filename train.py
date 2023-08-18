@@ -118,7 +118,7 @@ if __name__ == '__main__':
             #               loss= tf.keras.losses.CategoricalCrossentropy(),
             #               metrics=['accuracy'])
             
-            model.compile(optimizer=tf.keras.optimizers.SGD(lr_decayed_fn, momentum=0.9),
+            model.compile(optimizer=tf.keras.optimizers.SGD(momentum=0.9),
                            loss= tf.keras.losses.CategoricalCrossentropy(),
                            metrics=['accuracy'])
                         #metrics=['accuracy'tf.keras.metrics.Accuracy()])
