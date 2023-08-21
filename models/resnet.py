@@ -292,9 +292,9 @@ class AttentionBlock(tf.keras.layers.Layer):
         self.dropout = tf.keras.layers.Dropout(0.5)        
         
     def position_encoding(self, d, n):    
-        vals_i = tf.range(0, d)
+        vals_i = tf.reshape(tf.range(d), (1,-1))
         vals_i = tf.tile(vals_i, (n, 1))
-        pos = tf.range(0, n)
+        pos = tf.reshape(tf.range(n), (1,-1))
         pos = tf.transpose(tf.tile(pos, (d, 1)))        
         sins  = tf.math.sin(pos / tf.math.pow(10000, 2*vals_i / d))
         cosins  = tf.math.cos(pos / tf.math.pow(10000, 2*vals_i / d))
