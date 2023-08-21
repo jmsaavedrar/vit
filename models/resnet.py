@@ -319,7 +319,7 @@ class AttentionBlock(tf.keras.layers.Layer):
         
 class ResNetAtt(tf.keras.Model):            
     def __init__(self, block_sizes, filters, number_of_classes, use_bottleneck = False, se_factor = 0, kernel_regularizer = None, **kwargs) :
-        super(ResNet, self).__init__(**kwargs)
+        super(ResNetAtt, self).__init__(**kwargs)
         self.encoder = ResNetBackbone(block_sizes, filters, use_bottleneck, se_factor, kernel_regularizer = kernel_regularizer, name = 'encoder')
         self.att_block = AttentionBlock(projection_dim = 512)                                    
         self.avg_pool = tf.keras.layers.GlobalAveragePooling2D()                     
