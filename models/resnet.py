@@ -325,7 +325,7 @@ class ResNetAtt(tf.keras.Model):
         super(ResNetAtt, self).__init__(**kwargs)
         self.encoder = ResNetBackbone(block_sizes, filters, use_bottleneck, se_factor, kernel_regularizer = kernel_regularizer, name = 'encoder')
         self.att_block = AttentionBlock(projection_dim = 512)                                    
-        self.avg_pool = tf.keras.layers.GlobalAveragePooling2D()                     
+        self.avg_pool = tf.keras.layers.GlobalAveragePooling1D()                     
         self.classifier = tf.keras.layers.Dense(number_of_classes, name='classifier')
         
     def call(self, inputs, training):
