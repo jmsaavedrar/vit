@@ -292,6 +292,9 @@ class AttentionBlock(tf.keras.layers.Layer):
         self.dropout = tf.keras.layers.Dropout(0.5)        
         
     def position_encoding(self, d, n):    
+        """
+        return nxd
+        """
         vals_i = tf.cast(tf.reshape(tf.range(d), (1,-1)), tf.float32)
         vals_i = tf.tile(vals_i, (n, 1))
         pos = tf.cast(tf.reshape(tf.range(n), (1,-1)), tf.float32)
@@ -306,7 +309,7 @@ class AttentionBlock(tf.keras.layers.Layer):
         d = tf.shape(x)[2]
         n = tf.shape(x)[1]
         b = tf.shape(x)[0]
-        pos = self.position_encoding(d, n)
+        pos = tf.reshape(self.position_encoding(d, n), (1, n, d))
         pos = tf.tile(pos, [b,1,1])        
         x = pos + x           
         for block in self.blocks:
