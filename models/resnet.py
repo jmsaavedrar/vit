@@ -287,7 +287,7 @@ class AttentionLayer(tf.keras.layers.Layer):
 class AttentionBlock(tf.keras.layers.Layer):
     def __init__(self, projection_dim, num_heads=4, num_blocks=1, dropout_rate=0.1, **kwargs):
         super(AttentionBlock, self).__init__(**kwargs)
-        self.blocks = [AttentionBlock(projection_dim, num_heads, dropout_rate) for _ in range(num_blocks)]
+        self.blocks = [AttentionLayer(projection_dim, num_heads, dropout_rate) for _ in range(num_blocks)]
         self.norm = tf.keras.layers.LayerNormalization(epsilon=1e-6)
         self.dropout = tf.keras.layers.Dropout(0.5)        
         
