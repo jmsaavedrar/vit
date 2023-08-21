@@ -296,8 +296,8 @@ class AttentionBlock(tf.keras.layers.Layer):
         vals_i = tf.tile(vals_i, (n, 1))
         pos = tf.cast(tf.reshape(tf.range(n), (1,-1)), tf.float32)
         pos = tf.transpose(tf.tile(pos, (d, 1)))                
-        sins  = tf.math.sin(pos / tf.math.pow(10000.0, 2.0*vals_i / d))
-        cosins  = tf.math.cos(pos / tf.math.pow(10000.0, 2.0*vals_i / d))
+        sins  = tf.math.sin(pos / tf.math.pow(10000.0, 2.0*vals_i / tf.cast(d, tf.float32)))
+        cosins  = tf.math.cos(pos / tf.math.pow(10000.0, 2.0*vals_i / tf.cast(d, tf.float32)))
         pe =  tf.where(tf.equal(tf.math.floormod(vals_i, 2),0), sins, cosins) 
         return pe
     
