@@ -339,5 +339,5 @@ class ResNetAtt(tf.keras.Model):
         return x
 
 def create_resnet(n_classes):
-    model = ResNet([3,4,6,3],[64,128,256,512], n_classes)
+    model = ResNetAtt([3,4,6,3],[64,128,256,512], n_classes)
     return model
