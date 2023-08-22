@@ -344,6 +344,6 @@ class ResNetAtt(tf.keras.Model):
 def create_resnet(n_classes, attention = False):
     if attention :
         model = ResNetAtt([3,4,6,3],[64,128,256,512], n_classes)
-    else
+    else :
         model = ResNet([3,4,6,3],[64,128,256,512], n_classes)
     return model
