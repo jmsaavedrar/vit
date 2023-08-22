@@ -125,7 +125,7 @@ if __name__ == '__main__':
             model_file = os.path.join(model_dir, 'model', 'model')
             if args.only_test :
                 print(model_file)
-                model.load_weights(model_file)
+                model.load_weights(model_file, by_name = True, skip_mismatch = True)
                 model.evaluate(ds_valid, steps = n_steps_valid)
                 
             else :    
