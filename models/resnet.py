@@ -242,6 +242,10 @@ class ResNet(tf.keras.Model):
         x = self.classifier(x)
         x = tf.keras.layers.Softmax()(x)
         return x
+    
+    def get_model(self, input_shape):        
+        x = tf.keras.layers.Input(shape = input_shape)
+        return tf.keras.Model(inputs = [x], outputs = self.call(x))
 
 
 class MLP(tf.keras.layers.Layer):
@@ -340,10 +344,16 @@ class ResNetAtt(tf.keras.Model):
         x = self.classifier(x)
         x = tf.keras.layers.Softmax()(x)
         return x
+    
+    def get_model(self, input_shape):        
+        x = tf.keras.layers.Input(shape = input_shape)
+        return tf.keras.Model(inputs = [x], outputs = self.call(x))
 
-def create_resnet(n_classes, attention = False):
+def create_resnet(config_data, attention = False):
+    n_classes = config_data.get('N_CLASSES')
+    input_shape = [config_data.get('CROP_SIZE'), config_data.get('CROP_SIZE'), 3]
     if attention :
-        model = ResNetAtt([3,4,6,3],[64,128,256,512], n_classes)
+        model = ResNetAtt([3,4,6,3],[64,128,256,512], n_classes).get_model(input_shape)
     else :
-        model = ResNet([3,4,6,3],[64,128,256,512], n_classes)
+        model = ResNet([3,4,6,3],[64,128,256,512], n_classes).get_model(input_shape)
     return model
