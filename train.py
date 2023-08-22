@@ -35,6 +35,7 @@ if __name__ == '__main__':
     parser.add_argument('-config', type = str, required = True)    
     parser.add_argument('-model', type = str, choices = ['VIT', 'RESNET'], required = True)
     parser.add_argument('-gpu', type = int, required = False) # gpu = -1 set for using all gpus
+    parser.add_argument('-only_test', type = bool, required = False, default = False, action=argparse.BooleanOptionalAction) 
     args = parser.parse_args()
     gpu_id = 0
     if not args.gpu is None :
@@ -117,26 +118,30 @@ if __name__ == '__main__':
             #model.compile(optimizer=tf.keras.optimizers.Adam(), #tf.keras.optimizers.SGD(lr_decayed_fn, momentum=0.9),
             #               loss= tf.keras.losses.CategoricalCrossentropy(),
             #               metrics=['accuracy'])
-            
-            model.compile(optimizer=tf.keras.optimizers.SGD(momentum=0.9),
-                           loss= tf.keras.losses.CategoricalCrossentropy(),
-                           metrics=['accuracy'])
-                        #metrics=['accuracy'tf.keras.metrics.Accuracy()])
-            history = model.fit(ds_train,
-                                validation_data = ds_valid,
-                                validation_steps = n_steps_valid,
-                                epochs=config_model.getint('EPOCHS'),
-                                callbacks=[early_stopping, model_checkpoint_callback])                
+            model_file = os.path.join(model_dir, 'model', 'model')
+            if args.only_test :
+                model.load_weights(model_file)
+                model.evaluate(ds_valid, steps = n_steps_valid)
+                
+            else :    
+                model.compile(optimizer=tf.keras.optimizers.SGD(momentum=0.9),
+                               loss= tf.keras.losses.CategoricalCrossentropy(),
+                               metrics=['accuracy'])
+                            #metrics=['accuracy'tf.keras.metrics.Accuracy()])
+                history = model.fit(ds_train,
+                                    validation_data = ds_valid,
+                                    validation_steps = n_steps_valid,
+                                    epochs=config_model.getint('EPOCHS'),
+                                    callbacks=[early_stopping, model_checkpoint_callback])                
     
                           
-    #predicting                    
-        #hisitory = simsiam.evaluate(ssl_ds)
-    # Visualize the training progress of the model.
-    # Extract the backbone ResNet20.
-    #saving model
-    # print('saving model')
-    model_file = os.path.join(model_dir, 'model', 'model')
-    
-    model.save_weights(model_file)
-    print("model saved to {}".format(model_file))        
+                #predicting                    
+                    #hisitory = simsiam.evaluate(ssl_ds)
+                # Visualize the training progress of the model.
+                # Extract the backbone ResNet20.
+                #saving model
+                # print('saving model')                
+                
+                model.save_weights(model_file)
+                print("model saved to {}".format(model_file))        
 #
