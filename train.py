@@ -33,9 +33,9 @@ AUTO = tf.data.AUTOTUNE
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-config', type = str, required = True)    
-    parser.add_argument('-model', type = str, choices = ['VIT', 'RESNET'], required = True)
+    parser.add_argument('-model', type = str, choices = ['VIT', 'RESNET', 'RESNET-ATT'], required = True)
     parser.add_argument('-gpu', type = int, required = False) # gpu = -1 set for using all gpus
-    parser.add_argument('-only_test', type = bool, required = False, default = False, action=argparse.BooleanOptionalAction) 
+    parser.add_argument('-test_only', type = bool, required = False, default = False, action=argparse.BooleanOptionalAction) 
     args = parser.parse_args()
     gpu_id = 0
     if not args.gpu is None :
@@ -128,7 +128,7 @@ if __name__ == '__main__':
                                loss= tf.keras.losses.CategoricalCrossentropy(),
                                metrics=['accuracy'])
                             #metrics=['accuracy'tf.keras.metrics.Accuracy()])
-            if args.only_test :                
+            if args.test_only:                
                 #model.load_weights(config_model.get('CKP_FILE'))
                 model.load_weights(model_file)
                 print('--- weights loaded from {} ---'.format(model_file))
