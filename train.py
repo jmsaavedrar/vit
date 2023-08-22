@@ -123,17 +123,17 @@ if __name__ == '__main__':
             #               loss= tf.keras.losses.CategoricalCrossentropy(),
             #               metrics=['accuracy'])
             model_file = os.path.join(model_dir, 'model', 'model')
+            model.compile(optimizer=tf.keras.optimizers.SGD(momentum=0.9),
+                               loss= tf.keras.losses.CategoricalCrossentropy(),
+                               metrics=['accuracy'])
+                            #metrics=['accuracy'tf.keras.metrics.Accuracy()])
             if args.only_test :                
                 #model.load_weights(config_model.get('CKP_FILE'))
                 model.load_weights(model_file)
                 print('--- weights loaded from {} ---'.format(model_file))
                 model.evaluate(ds_valid, steps = n_steps_valid)
                 
-            else :    
-                model.compile(optimizer=tf.keras.optimizers.SGD(momentum=0.9),
-                               loss= tf.keras.losses.CategoricalCrossentropy(),
-                               metrics=['accuracy'])
-                            #metrics=['accuracy'tf.keras.metrics.Accuracy()])
+            else :                    
                 history = model.fit(ds_train,
                                     validation_data = ds_valid,
                                     validation_steps = n_steps_valid,
