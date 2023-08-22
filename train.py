@@ -124,7 +124,7 @@ if __name__ == '__main__':
             #               metrics=['accuracy'])
             model_file = os.path.join(model_dir, 'model', 'model')
             if args.only_test :                
-                model.load_weights(model_file)
+                model.load_weights(config_model.get('CKP_FILE'))
                 print('--- weights loaded from {} ---'.format(model_file))
                 model.evaluate(ds_valid, steps = n_steps_valid)
                 
