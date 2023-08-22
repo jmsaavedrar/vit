@@ -131,7 +131,8 @@ if __name__ == '__main__':
                 #model.load_weights(config_model.get('CKP_FILE'))
                 model.load_weights(model_file)
                 print('--- weights loaded from {} ---'.format(model_file))
-                model.evaluate(ds_valid, steps = n_steps_valid)
+                loss, acc = model.evaluate(ds_valid, steps = n_steps_valid)
+                print(acc)
                 
             else :                    
                 history = model.fit(ds_train,
