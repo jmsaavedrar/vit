@@ -42,9 +42,9 @@ class SEBlock(tf.keras.layers.Layer):
         self.bn_1 = tf.keras.layers.BatchNormalization(name = 'se_bn1')        
         self.fc_2 = tf.keras.layers.Dense(channels, kernel_regularizer = kernel_regularizer, name = 'se_fc2')    
             
-    def call(self, inputs, training = True):       
+    def call(self, inputs):       
         y = self.gap(inputs)
-        y = tf.keras.activations.relu(self.bn_1(self.fc_1(y), training))
+        y = tf.keras.activations.relu(self.bn_1(self.fc_1(y)))
         scale = tf.keras.activations.sigmoid(self.fc_2(y))
         scale = tf.reshape(scale, (-1,1,1,self.channels))
         y = tf.math.multiply(inputs, scale)
@@ -77,15 +77,15 @@ class ResidualBlock(tf.keras.layers.Layer):
             self.use_se_block = True
         
     #using full pre-activation mode
-    def call(self, inputs, training = True):
-        x = self.bn_0(inputs, training)
+    def call(self, inputs):
+        x = self.bn_0(inputs)
         x = tf.keras.activations.relu(x)
         if self.use_projection : 
             shortcut = self.projection(x)
         else :
             shortcut = x
         x = self.conv_1(x)
-        x = self.bn_1(x, training)
+        x = self.bn_1(x)
         x = tf.keras.activations.relu(x)
         x = self.conv_2(x)                    
         x = shortcut + x # residual function
@@ -122,19 +122,19 @@ class BottleneckBlock(tf.keras.layers.Layer):
             self.use_se_block = True
         
     #using full pre-activation mode
-    def call(self, inputs, training = True):
+    def call(self, inputs):
         #full-preactivation
-        x = self.bn_0(inputs, training)
+        x = self.bn_0(inputs)
         x = tf.keras.activations.relu(x)
         if self.use_projection :
             shortcut = self.projection(x)
         else :
             shortcut = x            
         x = self.conv_1(x)
-        x = self.bn_1(x, training)
+        x = self.bn_1(x)
         x = tf.keras.activations.relu(x)
         x = self.conv_2(x)
-        x = self.bn_2(x, training)
+        x = self.bn_2(x)
         x = tf.keras.activations.relu(x)
         x = self.conv_3(x)                    
         x = shortcut + x # residual function
@@ -172,10 +172,10 @@ class ResNetBlock(tf.keras.layers.Layer):
         for idx_block in range(1, block_size) :
             self.block_collector.append(residual_block(filters = filters, stride = 1, se_factor = se_factor, kernel_regularizer = kernel_regularizer, name = 'rblock_{}'.format(idx_block)))
                     
-    def call(self, inputs, training):
+    def call(self, inputs):
         x = inputs;
         for block in self.block_collector :
-            x = block(x, training)
+            x = block(x)
         return x;
 
 
@@ -207,12 +207,12 @@ class ResNetBackbone(tf.keras.Model):
         self.bn_last= tf.keras.layers.BatchNormalization(name = 'bn_last')
             
         
-    def call(self, inputs, training):
+    def call(self, inputs):
         x = inputs
         x = self.conv_0(x)
         x = self.max_pool(x)                 
         for block in self.resnet_blocks :
-            x = block(x, training)      
+            x = block(x)      
         x = self.bn_last(x)                
         x = tf.keras.activations.relu(x)  
         return x
@@ -234,9 +234,9 @@ class ResNet(tf.keras.Model):
         self.avg_pool = tf.keras.layers.GlobalAveragePooling2D()                     
         self.classifier = tf.keras.layers.Dense(number_of_classes, name='classifier')
         
-    def call(self, inputs, training):
+    def call(self, inputs):
         x = inputs
-        x = self.encoder(x, training)    
+        x = self.encoder(x)    
         x = self.avg_pool(x)                
         x = tf.keras.layers.Flatten()(x)                        
         x = self.classifier(x)
@@ -328,9 +328,9 @@ class ResNetAtt(tf.keras.Model):
         self.avg_pool = tf.keras.layers.GlobalAveragePooling1D()                     
         self.classifier = tf.keras.layers.Dense(number_of_classes, name='classifier')
         
-    def call(self, inputs, training):
+    def call(self, inputs):
         x = inputs
-        x = self.encoder(x, training)
+        x = self.encoder(x)
         b = tf.shape(x)[0]
         c = tf.shape(x)[-1]
         x = tf.reshape(x, [b, -1, c])
