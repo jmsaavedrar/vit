@@ -351,7 +351,7 @@ class ResNetAtt(tf.keras.Model):
 
 def create_resnet(config_data, attention = False):
     n_classes = config_data.get('N_CLASSES')
-    input_shape = [config_data.get('CROP_SIZE'), config_data.get('CROP_SIZE'), 3]
+    input_shape = [config_data.getint('CROP_SIZE'), config_data.getint('CROP_SIZE'), 3]
     if attention :
         model = ResNetAtt([3,4,6,3],[64,128,256,512], n_classes).get_model(input_shape)
     else :
