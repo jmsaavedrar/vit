@@ -115,6 +115,10 @@ if __name__ == '__main__':
                 import models.resnet as model 
                 model = model.create_resnet(config_data.getint('N_CLASSES'), attention = False)
             
+            if model_name == 'RESNET-ATT':
+                import models.resnet as model 
+                model = model.create_resnet(config_data.getint('N_CLASSES'), attention = True)
+            
             #model.compile(optimizer=tf.keras.optimizers.Adam(), #tf.keras.optimizers.SGD(lr_decayed_fn, momentum=0.9),
             #               loss= tf.keras.losses.CategoricalCrossentropy(),
             #               metrics=['accuracy'])
