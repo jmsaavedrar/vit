@@ -16,9 +16,9 @@ import os
 import tensorflow as tf
 import tensorflow_datasets as tfds
 import improc.augmentation as aug
-
 import configparser
 import argparse
+import numpy as np
 # import the dataset builder, here is an example for qd
 
 #---------------------------------------------------------------------------------------
@@ -123,6 +123,7 @@ if __name__ == '__main__':
             #               loss= tf.keras.losses.CategoricalCrossentropy(),
             #               metrics=['accuracy'])
             model_file = os.path.join(model_dir, 'model', 'model')
+            history_file = os.path.join(model_dir, 'model', 'history.npy')
             model.compile(optimizer=tf.keras.optimizers.SGD(momentum=0.9),
                                loss= tf.keras.losses.CategoricalCrossentropy(),
                                metrics=['accuracy'])
@@ -147,8 +148,9 @@ if __name__ == '__main__':
                 # Visualize the training progress of the model.
                 # Extract the backbone ResNet20.
                 #saving model
-                # print('saving model')                
-                
+                # print('saving model')
+                                
+                np.save(history_file, history.history)
                 model.save_weights(model_file)
                 print("model saved to {}".format(model_file))        
 #
