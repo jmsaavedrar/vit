@@ -113,7 +113,7 @@ if __name__ == '__main__':
                 
             if model_name == 'RESNET':
                 import models.resnet as model 
-                model = model.create_resnet(config_data.getint('N_CLASSES'))
+                model = model.create_resnet(config_data.getint('N_CLASSES'), attention = False)
             
             #model.compile(optimizer=tf.keras.optimizers.Adam(), #tf.keras.optimizers.SGD(lr_decayed_fn, momentum=0.9),
             #               loss= tf.keras.losses.CategoricalCrossentropy(),

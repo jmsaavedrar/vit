@@ -341,6 +341,9 @@ class ResNetAtt(tf.keras.Model):
         x = tf.keras.layers.Softmax()(x)
         return x
 
-def create_resnet(n_classes):
-    model = ResNetAtt([3,4,6,3],[64,128,256,512], n_classes)
+def create_resnet(n_classes, attention = False):
+    if attention :
+        model = ResNetAtt([3,4,6,3],[64,128,256,512], n_classes)
+    else
+        model = ResNet([3,4,6,3],[64,128,256,512], n_classes)
     return model
