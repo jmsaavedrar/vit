@@ -23,7 +23,9 @@ import numpy as np
 
 #---------------------------------------------------------------------------------------
 def map_func(sample, daug_func, n_classes):
-    image = sample['image']    
+    image = sample['image']
+    image = tf.cast(image, tf.float32)
+    image = (255 - image ) / 255
     label = sample['label']
     return daug_func(image), tf.one_hot(label, depth = n_classes)
 
