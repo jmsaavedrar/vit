@@ -7,7 +7,7 @@ In this implementation, we use datasets in TFDS format. As an example, we have a
 $ python view_dataset.py  -dataset tfds_skberlin -data test
 
 
-You will need to untar the dataset into $(HOME)/tensorflow_datasets  (this is the folder (by default) where the system looks for tfds datasets).
+You will need to untar the dataset into $(HOME)/tensorflow_datasets, which is the folder (by default) where the system looks for tfds datasets.
 
 # Train
 $ python train.py  -config config/berlin.ini -model <MODEL> -gpu 0
